@@ -4,15 +4,16 @@ import NoteContext from "./notesContext";
 const NoteState = (props) => {
   const host = "http://localhost:5000";
   const noteInitial = []
+  // const id ="65b3a2e3ad66b685ea103846"
 
   const [notes, setNotes] = useState(noteInitial);
 
 
   //get all note
-  const getNotes = async (id) => {
+  const getNotes = async () => {
 
-    const response = await fetch(`${host}/api/notes/fetchnotes/${id}`, {
-      method: "Get",
+    const response = await fetch(`${host}/api/notes/fetchnotes`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
@@ -25,30 +26,21 @@ const NoteState = (props) => {
   };
 
   //add a new node in client side
-  const addNote = async (title, description, tag) => {
+  const addNote= async(title, description, tag)=> {
 
     const response = await fetch(`${host}/api/notes/addnote`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjViMjAwZmIzMWViMjg0NjgwYTQ3NzQ4In0sImlhdCI6MTcwNjE2NTk1MH0.2kPwFtNflKeJoX_ZQEytULs9AG8t0QBJ6KRAkpA2EZk",
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjViMjAwZmIzMWViMjg0NjgwYTQ3NzQ4In0sImlhdCI6MTcwNjE2NTk1MH0.2kPwFtNflKeJoX_ZQEytULs9AG8t0QBJ6KRAkpA2EZk",
       },
 
-      body: JSON.stringify({title, description, tag}), // body data type must match "Content-Type" header
+      body: JSON.stringify({ title, description, tag }), // body data type must match "Content-Type" header
     });
-    const note = {
-      _id: "65b3a2e3ad66b685ea103846",
-      user: "65b200fb31eb284680a47748",
-      title: title,
-      description: description,
-      tag: tag,
-      date: "2024-01-26T12:17:39.240Z",
-      __v: 0,
-    };
-    const json = await response.json()
-    setNotes(notes.concat(note));
-  };
+    
+    const json = await response.json();
+    setNotes(notes.concat(json));
+  }
 
   //Deleting a note in notes
   const deleteNote = async (id) => {
@@ -62,17 +54,19 @@ const NoteState = (props) => {
 
       // body data type must match "Content-Type" header
     });
+    
+    const json = await response.json()
     const newNote = notes.filter((note) => {
       return note._id !== id;
     });
     setNotes(newNote);
-    const json = await response.json()
     
   };
+  // updating a note 
   const editNote = async (id, title, description, tag) => {
     // Api call made
     const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
@@ -81,16 +75,20 @@ const NoteState = (props) => {
 
       body: JSON.stringify({title, description, tag}), // body data type must match "Content-Type" header
     });
+    const json = await response.json()
     //Edit notes in client side
+    let newNotes = JSON.parse(JSON.stringify(notes))
     for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
+      const element = newNotes[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
       }
     }
-    const json = await response.json()
+    setNotes(newNotes)
+   
   };
 
   return (

@@ -19,5 +19,4 @@ const NoteItem=(props)=> {
     </div>
   )
 }
-
 export default NoteItem

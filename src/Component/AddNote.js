@@ -6,8 +6,8 @@ function AddNote() {
     const [note,setNote]=useState({title: "",description: "",tag: ""})
     const {addNote}= useContext(notesContext)
   const handleClick = (e) => {
-     e.preventDefault()
      addNote(note.title,note.description,note.tag);
+     setNote({title: "",description: "",tag: ""})
   };
   const handleChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value })
@@ -24,8 +24,8 @@ function AddNote() {
           className="form-control"
           id="title"
           name="title"
-          placeholder="title"
           onChange={handleChange}
+          value={note.title}
         />
       </div>
       <div className="mb-3">
@@ -38,6 +38,7 @@ function AddNote() {
           name="description"
           rows="3"
           onChange={handleChange}
+          value={note.description}
         ></textarea>
       </div>
       <div className="mb-3">
@@ -49,11 +50,12 @@ function AddNote() {
           className="form-control"
           id="tag"
           name="tag"
-          
+          value={note.tag}
           onChange={handleChange}
         />
       </div>
       <input
+       disabled={note.title.length<5 || note.description.length<5}
         className="btn btn-primary"
         onClick={handleClick}
         type="submit"

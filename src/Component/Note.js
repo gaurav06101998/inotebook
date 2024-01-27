@@ -4,31 +4,42 @@ import notesContext from "../Context/Notes/notesContext";
 
 function NoteContext() {
   const noteContext = useContext(notesContext);
-  const { notes, getNotes } = noteContext;
-  const [note, setNote] = useState({ title: "", description: "", tag: "" });
+  const { notes, getNotes,editNote } = noteContext;
+  const [note, setNote] = useState({id:"", etitle: "", edescription: "", etag: "" });
   useEffect(() => {
     getNotes();
     // eslint-disable-next-line
   }, []);
+  const ref = useRef(null);
+  const refClose = useRef(null);
+  
   const updateNote = (currentNote) => {
     ref.current.click()
-    setNote({
+    setNote({id: currentNote._id,
       etitle: currentNote.title,
       edescription: currentNote.description,
-      etag: currentNote.tag,
+      etag: currentNote.tag
     });
+    
   };
   const handleClick = (e) => {
-    e.preventDefault();
+    editNote(note.id,note.etitle,note.edescription,note.etag)
+    refClose.current.click()
+  
   };
   const handleChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
+    
   };
-  const ref = useRef(null);
-
+  
+  
   return (
     <>
       <div className="modal-dialog modal-dialog-centered">
+      <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Launch demo modal
+            </button>
+
         <div
           className="modal fade"
           id="exampleModal"
@@ -58,7 +69,7 @@ function NoteContext() {
                       className="form-control"
                       id="etitle"
                       name="etitle"
-                      value={note.title}
+                      value={note.etitle}
                       onChange={handleChange}
                     />
                   </div>
@@ -70,31 +81,32 @@ function NoteContext() {
                       className="form-control"
                       id="edescription"
                       name="edescription"
-                      value={note.title}
+                      value={note.edescription}
                       onChange={handleChange}></textarea>
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="tag" className="col-form-label">
-                      Tag:
+                    <label htmlFor="etag" className="col-form-label">
+                      tag:
                     </label>
                     <input
                       type="text"
                       className="form-control"
                       id="etag"
                       name="etag"
-                      value={note.tag}
+                      value={note.etag}
                       onChange={handleChange}
                     />
                   </div>
                 </form>
               </div>
               <div className="modal-footer">
+              <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button
-                  ref={ref}
+                disabled={note.etitle.length<5 || note.edescription.length<5}
                   type="button"
                   className="btn btn-primary"
                   onClick={handleClick}>
-                  Update Note
+                  Update Notes
                 </button>
               </div>
             </div>
@@ -103,6 +115,9 @@ function NoteContext() {
       </div>
       <div className="row my-3">
         <h2>Your Notes</h2>
+        <div className="container mx-2">
+        {notes.length === 0 && "No notes to display"}
+        </div>
         {notes.map((note) => {
           return (
             <NoteItem key={note._id} updateNote={updateNote} note={note} />
