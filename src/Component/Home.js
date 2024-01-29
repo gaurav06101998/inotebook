@@ -2,10 +2,10 @@ import React from "react";
 import AddNote from "./AddNote";
 
 
-function Home() {
-  
+function Home(props) {
+  const {showAlert} =props
   return (
-   <AddNote/>
+   <AddNote showAlert={showAlert} />
   );
 }
 

@@ -2,12 +2,14 @@ import React, { useContext, useState } from "react";
 import NoteContext from "./Note";
 import notesContext from "../Context/Notes/notesContext";
 
-function AddNote() {
+function AddNote(props) {
     const [note,setNote]=useState({title: "",description: "",tag: ""})
+    const { showAlert} =props
     const {addNote}= useContext(notesContext)
   const handleClick = (e) => {
      addNote(note.title,note.description,note.tag);
      setNote({title: "",description: "",tag: ""})
+     showAlert("Adding notes successfully","success")
   };
   const handleChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value })
@@ -61,7 +63,7 @@ function AddNote() {
         type="submit"
         value="Submit"
       />
-      <NoteContext />
+      <NoteContext showAlert={showAlert}/>
     </div>
   );
 }

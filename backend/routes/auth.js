@@ -25,7 +25,7 @@ router.post('/createuser',[
             return res.status(400).json({error: 'Sorry email already exit'})
         }
         const salt = await bcrypt.genSalt(10);
-        const secPass = await bcrypt.hash(req.body.email,salt);
+        const secPass = await bcrypt.hash(req.body.password,salt);
 
 
         user= await User.create({
