@@ -20,7 +20,8 @@ const [credential,setCredential] = useState({email:"",password: ""})
           });
           const json = await response.json()
           if(json.success){
-            localStorage.setItem("token", json.jwtauth)
+            localStorage.setItem('token', json.jwtAuth)
+            
             navigate("/")
             props.showAlert('Login Successfully','success')
 
@@ -41,6 +42,7 @@ const [credential,setCredential] = useState({email:"",password: ""})
 
   return (
     <div className="col-md-3 container my-5">
+      <h2 className="my-4">Login to INotebook</h2>
       <form onSubmit={handleClick}>
         <div className="form-floating mb-3">
           <input

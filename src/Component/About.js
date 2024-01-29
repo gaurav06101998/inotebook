@@ -6,7 +6,7 @@ function About() {
     
   return (
     <div>
-      hello about 
+    this about page
     </div>
   )
 }
